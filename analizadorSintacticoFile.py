@@ -260,10 +260,10 @@ def delta(column, char, state):
 
 
 
-#lines = input()
-lines = sys.stdin.readlines()
-for line in lines:
-#while line != 'wea':
+line = input()
+#lines = sys.stdin.readlines()
+#for line in lines:
+while line != 'wea':
     i = 0
     line = line + " "
     while i < len(line):
@@ -275,17 +275,53 @@ for line in lines:
         print("Error lexico(linea:" + str(row) + ",posicion:" + str(i - len(lexeme)) + ")")
         exit(0)
 
-    #line = input()
+    line = input()
     row += 1
 
-print(diccLexema)
+#print(diccLexema)
 print(diccToken)
 
 global no_terminal
 global derivation_chain
-no_terminal = 'BB' #token inicial de la gramatica
-derivation_chain = ['BB'] #token inicial de la gramatica
+global token
+token = diccToken[0]
 
+def PROGRAMA():
+    print("PROGRAMA")
+    global token
+    if token == 'funcion' or token== 'id':
+        SENTENCE()
+    elif token == 'eol':
+        match('eol')
+        PROGRAMA()
+def FUNC():
+    print("FUNC")
+    global token
+    if token == 'funcion':
+        a = 1
+
+def SENTENCE():
+    print("SENTENCE")
+    global token
+    if token == 'id':
+        ASSIGN()
+def ASSIGN():
+    print("ASSIGN")
+    global token
+    if token == 'id':
+        match('id')
+        match('token_assign')
+        ASSIGNP()
+def ASSIGNP():
+    global token
+    print("ASSIGNP", token)
+    if token == 'token_integer':
+        match('token_integer')
+    elif token == 'token_float':
+        match('token_float')
+    elif token == 'token_string':
+        match('token_string')
+    PROGRAMA()
 def BB(token):
     if token == 'token_not' or token == 'true' or token == 'false' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id':
         EBAND(token)
@@ -380,7 +416,7 @@ def EARIP(token):
     if token == 'token_mas' or token == 'token_menos':
         OPSUM(token)
         EARI(token)
-    elif token == 'token_menor' or token == 'token_mayor' token == 'token_mayor_igual' or token == 'token_menor_igual' or token == 'token_igual_num' or token == 'token_diff_num' or token == 'token_and' or token == 'token_or' or token == 'eol' :
+    elif token == 'token_menor' or token == 'token_mayor' or token == 'token_mayor_igual' or token == 'token_menor_igual' or token == 'token_igual_num' or token == 'token_diff_num' or token == 'token_and' or token == 'token_or' or token == 'eol' :
         pass
     else:
         print('Error EARIP')
@@ -410,7 +446,8 @@ def EMULP(token):
     if token == 'token_div' or token == 'token_mul':
         OPMUL(token)
         EMUL(token)
-    elif token == 'token_par_der' or token == 'token_mas' or token == 'token_menos' or token == 'token_menor' or token == 'token_mayor' token == 'token_mayor_igual' or token == 'token_menor_igual' or token == 'token_igual_num' or token == 'token_diff_num' or token == 'token_and' or token == 'token_or' or token == 'eol' :
+    elif token == 'token_par_der' or token == 'token_mas':
+        #or token == 'token_menos' or token == 'token_menor' or token == 'token_mayor' token == 'token_mayor_igual' or token == 'token_menor_igual' or token == 'token_igual_num' or token == 'token_diff_num' or token == 'token_and' or token == 'token_or' or token == 'eol' :
         pass
     else:
         print("Error EMULP")
@@ -433,213 +470,24 @@ def E(token):
     else:
         print('Error E')
 
-def match():
-        
+global cont
+cont=0
+def match(espectedToken):
+    global token
+    global cont
+    print("match", espectedToken, token)
+    if(token == espectedToken):
+        cont+=1
+    else:
+        errorSintaxis(espectedToken)
 
+    if cont == len(diccToken):
+        print("El analisis sintactico ha finalizado correctamente.")
+        exit(0)
+    else:
+        token = diccToken[cont]
 
-"""
-def derivation (token):
-    global  no_terminal
-    global derivation_chain
+def errorSintaxis(espectedToken):
+    a = 1
 
-    derivation_chain.pop(0)
-
-    if no_terminal == 'MULASIG':
-        derivation_chain.insert(0, 'ASIG')
-        derivation_chain.insert(1, 'MULASIGP')
-    elif no_terminal == 'MULASIGP':
-        if(token == 'token_coma'):
-            derivation_chain.insert(0, 'token_coma')
-            derivation_chain.insert(1, 'MULASIG')
-    elif no_terminal == 'ASIG':
-        derivation_chain.insert(0, 'id')
-        derivation_chain.insert(1, 'token_assign')
-        derivation_chain.insert(2, 'ASIGP')
-    elif no_terminal == 'ASIGP':
-        if(token == 'token_integer'):
-            derivation_chain.insert(0, 'token_integer')
-        if (token == 'token_float'):
-            derivation_chain.insert(0, 'token_float')
-        if(token == 'token_string'):
-            derivation_chain.insert(0, 'token_string')
-    #Bloque boleano
-    elif no_terminal == 'BB':
-        if token == 'token_par_izq':
-            derivation_chain.insert(0, 'token_par_izq')
-            derivation_chain.insert(1, 'EBAND')
-            derivation_chain.insert(2, 'token_or')
-            derivation_chain.insert(3, 'BB')
-            derivation_chain.insert(4, 'token_par_der')
-        else:
-            derivation_chain.insert(0, 'EBAND')
-            derivation_chain.insert(1, 'BBP')
-    elif no_terminal == 'BBP':
-        if token == 'token_or':
-            derivation_chain.insert(0, 'token_or')
-            derivation_chain.insert(0, 'BB')
-    elif no_terminal == 'EBAND':
-        if token == 'token_par_izq':
-            derivation_chain.insert(0, 'token_par_izq')
-            derivation_chain.insert(1, 'EB')
-            derivation_chain.insert(2, 'token_and')
-            derivation_chain.insert(3, 'EBAND')
-            derivation_chain.insert(4, 'token_par_der')
-        else:
-            derivation_chain.insert(0, 'EB')
-            derivation_chain.insert(1, 'EBANDP')
-    elif no_terminal == 'EBANDP':
-        if token == 'token_and':
-            derivation_chain.insert(0, 'token_and')
-            derivation_chain.insert(1, 'EBAND')
-    elif no_terminal == 'EB':
-        if token == 'token_par_izq':
-            derivation_chain.insert(0, 'token_par_izq')
-            derivation_chain.insert(1, 'EBCOM')
-            derivation_chain.insert(2, 'OBIGU')
-            derivation_chain.insert(3, 'EB')
-            derivation_chain.insert(4, 'token_par_der')
-        elif token == 'token_not':
-            derivation_chain.insert(0, 'token_not')
-            derivation_chain.insert(1, 'EB')
-        else:
-            derivation_chain.insert(0, 'EBCOM')
-            derivation_chain.insert(1, 'EBP')
-    elif no_terminal == 'OBIGU':
-        if token == 'token_igual_num':
-            derivation_chain.insert(0, 'token_igual_num')
-        if token == 'token_diff_num':
-            derivation_chain.insert(0, 'token_diff_num')
-    elif no_terminal == 'EBCOM':
-        if token == 'token_par_izq':
-            derivation_chain.insert(0, 'token_par_izq')
-            derivation_chain.insert(1, 'EARI')
-            derivation_chain.insert(2, 'OBCOM')
-            derivation_chain.insert(3, 'EARI')
-            derivation_chain.insert(4, 'token_par_der')
-        elif token == 'true':
-            derivation_chain.insert(0, 'true')
-        elif token == 'false':
-            derivation_chain.insert(0, 'false')
-        else:
-            derivation_chain.insert(0, 'EARI')
-            derivation_chain.insert(1, 'OBCOM')
-            derivation_chain.insert(2, 'EARI')
-    elif no_terminal == 'OBCOM':
-        if token == 'token_menor_igual':
-            derivation_chain.insert(0, 'token_menor_igual')
-        if token == 'token_menor':
-            derivation_chain.insert(0, 'token_menor')
-        if token == 'token_mayor_igual':
-            derivation_chain.insert(0, 'token_mayor_igual')
-        if token == 'token_mayor':
-            derivation_chain.insert(0, 'token_mayor')
-    elif no_terminal == 'EARI':
-        if token == 'token_par_izq':
-            derivation_chain.insert(0, 'token_par_izq')
-            derivation_chain.insert(1, 'EMUL')
-            derivation_chain.insert(2, 'OPSUM')
-            derivation_chain.insert(3, 'EARI')
-            derivation_chain.insert(4, 'token_par_der')
-        elif token == 'token_mas' or token == 'token_menos':
-            derivation_chain.insert(0, 'OPSUM')
-            derivation_chain.insert(1, 'EARI')
-        else:
-            derivation_chain.insert(0, 'EMUL')
-            derivation_chain.insert(1, 'EARIP')
-    elif no_terminal == 'EARIP':
-        if token == 'token_mas' or token == 'token_menos':
-            derivation_chain.insert(0, 'OPSUM')
-            derivation_chain.insert(1, 'EARI')
-    elif no_terminal == 'OPSUM':
-        if token == 'token_mas':
-            derivation_chain.insert(0, 'token_mas')
-        elif token == 'token_menos':
-            derivation_chain.insert(0, 'token_menos')
-    elif no_terminal == 'EMUL':
-        if token == 'token_par_izq':
-            derivation_chain.insert(0, 'token_par_izq')
-            derivation_chain.insert(1, 'E')
-            derivation_chain.insert(2, 'OPMUL')
-            derivation_chain.insert(3, 'EMUL')
-            derivation_chain.insert(4, 'token_par_der')
-        else:
-            derivation_chain.insert(0, 'E')
-            derivation_chain.insert(1, 'EMULP')
-    elif no_terminal == 'EMULP':
-        if token == 'token_mul' or token == 'token_div':
-            derivation_chain.insert(0, 'OPMUL')
-            derivation_chain.insert(1, 'EMUL')
-    elif no_terminal == 'OPMUL':
-        if token == 'token_mul':
-            derivation_chain.insert(0, 'token_mul')
-        elif token == 'token_div':
-            derivation_chain.insert(0, 'token_div')
-    elif no_terminal == 'E':
-        if token == 'token_integer':
-            derivation_chain.insert(0, 'token_integer')
-        elif token == 'token_float':
-            derivation_chain.insert(0, 'token_float')
-        elif token == 'id':
-            derivation_chain.insert(0, 'id')
-
-global predictions
-predictions = { 'MULASIG': ['id'],
-                'MULASIGP': diccToken,
-                'ASIG': ['id'],
-                'ASIGP': diccToken,
-                'BBINIT': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq'],
-                'BB': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq', 'token_not'],
-                'BBP': diccToken,
-                'EBAND': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq', 'token_not'],
-                'EBANDP': diccToken,
-                'EB': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_not', 'token_par_izq'],
-                'EBP': diccToken,   
-                'OBIGU': ['token_igual_num', 'token_diff_num'],
-                'EBCOM': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq'],
-                'OBCOM': ['token_menor_igual', 'token_menor', 'token_mayor_igual', 'token_mayor'],
-                'EARI': ['token_integer', 'token_float', 'id', 'token_par_izq'],
-                'EARIP': diccToken,
-                'OPSUM': ['token_mas', 'token_menos'],
-                'EMUL': ['token_integer', 'token_float', 'id', 'token_par_izq'],
-                'EMULP': diccToken,
-                'OPMUL': ['token_mul', 'token_div'],
-                'E': ['token_integer', 'token_float', 'id'],
-                #Expresion booleana
-                'FIN': []
-              }
-"""
-
-for token in diccToken:
-
-    print("token:" + token)
-    #print(no_terminal)
-    while token != no_terminal:
-        if token in predictions[no_terminal]:
-            print(no_terminal)
-            print(derivation_chain)
-            derivation(token)
-            if len(derivation_chain)>0:
-                no_terminal = derivation_chain[0]
-            else:
-                no_terminal= 'FIN'
-                print("error")
-        else:
-            no_terminal = 'FIN'
-            print("error 1")
-            break
-
-    print(derivation_chain)
-    if no_terminal == 'FIN':
-        break
-    elif len(derivation_chain) > 0:
-        derivation_chain.pop(0)
-        no_terminal = derivation_chain[0]
-
-
-
-token = '0'
-while len(derivation_chain)>0:
-    no_terminal = derivation_chain[0]
-    derivation(token)
-
-print(derivation_chain)
+PROGRAMA()
