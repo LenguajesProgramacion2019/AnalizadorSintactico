@@ -260,30 +260,184 @@ def delta(column, char, state):
 
 
 
-line = raw_input()
-#for line in lines:
-while line != 'wea':
+#lines = input()
+lines = sys.stdin.readlines()
+for line in lines:
+#while line != 'wea':
     i = 0
     line = line + " "
     while i < len(line):
         back = delta(i+1, line[i], back[0])
         i = i + 1 - back[1]
+    diccLexema.append("\n")
+    diccToken.append('eol')
     if back[0] == 8:
         print("Error lexico(linea:" + str(row) + ",posicion:" + str(i - len(lexeme)) + ")")
         exit(0)
 
-    line = raw_input()
+    #line = input()
     row += 1
 
-#print(diccLexema)
-#print(diccToken)
+print(diccLexema)
+print(diccToken)
 
 global no_terminal
 global derivation_chain
 no_terminal = 'BB' #token inicial de la gramatica
 derivation_chain = ['BB'] #token inicial de la gramatica
 
+def BB(token):
+    if token == 'token_not' or token == 'true' or token == 'false' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id':
+        EBAND(token)
+        BBP(token)
+    else:
+        print("error BB")
 
+def BBP(token):
+    if token == 'or':
+        token = match()
+        BB(token)
+    elif token == 'eol':
+        pass
+    else:
+        print("error BBP")
+
+def EBAND(token):
+    if token == 'token_not' or token == 'true' or token == 'false' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id':
+        EB(token)
+        EBANDP(token)
+    else:
+        print("error EBAND")
+
+def EBANDP(token):
+    if token == 'and':
+        token = match()
+        EBAND(token)
+    elif token == 'or' or token == 'eol':
+        pass
+    else:
+        print("Error EBANDP")
+
+def EB(token):
+    if token == 'true' or token == 'false' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id':    
+        EBCOM(token)
+        EBP(token)
+    elif token == 'token_not':
+        token = match()
+        EB(token)
+    else:
+        print("Error EB")
+
+def EBP(token):
+    if token == 'token_igual_num' or token == 'token_diff_num':
+        OBIGU(token)
+        EB(token)
+    elif token == 'token_and' or token == 'token_or' or token == 'eol':
+        pass
+    else:
+        print("Error EBP")
+
+def OBIGU(token):
+    if token == 'token_igual_num':
+        token = match()
+    elif token == 'token_diff_num':
+        token = match()
+    else:
+        print("Error OBIGU")
+
+def EBCOM(token):
+    if token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id':
+        EARI(token)
+        OBCOM(token)
+        EARI(token)
+    elif token == 'true':
+        token = match()
+    elif token == 'false':
+        token = match()
+    else:
+        print("Error EBCOM")
+
+def OBCOM(token):
+    if token == 'token_menor':
+        token = match()
+    elif token == 'token_mayor':
+        token = match()
+    if token == 'token_menor_igual':
+        token = match()
+    if token == 'token_mayor_igual':
+        token = match()
+    else:
+        print("Error OBCOM")
+
+def EARI(token):
+    if token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id':
+        EMUL(token)
+        EARIP(token)
+    else:
+        print("Error EARI")
+
+def EARIP(token):
+    if token == 'token_mas' or token == 'token_menos':
+        OPSUM(token)
+        EARI(token)
+    elif token == 'token_menor' or token == 'token_mayor' token == 'token_mayor_igual' or token == 'token_menor_igual' or token == 'token_igual_num' or token == 'token_diff_num' or token == 'token_and' or token == 'token_or' or token == 'eol' :
+        pass
+    else:
+        print('Error EARIP')
+
+def OPSUM(token):
+    if token == 'token_mas':
+        token = match()
+    elif token == 'token_menos':
+        token == match()
+    else:
+        print('Error OPSUM')
+
+def EMUL(token):
+    if token == 'token_par_izq':
+        token = match()
+        E(token)
+        OPMUL(token)
+        EMUL(token)
+        token = match()
+    elif token == 'token_integer' or token == 'token_float' or token == 'id':
+        E(token)
+        EMULP(token)
+    else:
+        print("Error EMUL")
+
+def EMULP(token):
+    if token == 'token_div' or token == 'token_mul':
+        OPMUL(token)
+        EMUL(token)
+    elif token == 'token_par_der' or token == 'token_mas' or token == 'token_menos' or token == 'token_menor' or token == 'token_mayor' token == 'token_mayor_igual' or token == 'token_menor_igual' or token == 'token_igual_num' or token == 'token_diff_num' or token == 'token_and' or token == 'token_or' or token == 'eol' :
+        pass
+    else:
+        print("Error EMULP")
+
+def OPMUL(token):
+    if token == 'token_div':
+        token = match()
+    elif token == 'token_mul':
+        token = match()
+    else:
+        print('Error OPMUL')
+
+def E(token):
+    if token == 'token_integer':
+        token = match()
+    elif token == 'token_float':
+        token = match()
+    elif token == 'id':
+        token = match()
+    else:
+        print('Error E')
+
+def match():
+        
+
+
+"""
 def derivation (token):
     global  no_terminal
     global derivation_chain
@@ -434,16 +588,16 @@ predictions = { 'MULASIG': ['id'],
                 'ASIG': ['id'],
                 'ASIGP': diccToken,
                 'BBINIT': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq'],
-                'BB': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq'],
+                'BB': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq', 'token_not'],
                 'BBP': diccToken,
-                'EBAND': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq'],
+                'EBAND': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq', 'token_not'],
                 'EBANDP': diccToken,
                 'EB': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_not', 'token_par_izq'],
-                'EBP': diccToken,
+                'EBP': diccToken,   
                 'OBIGU': ['token_igual_num', 'token_diff_num'],
                 'EBCOM': ['token_integer', 'token_float', 'id', 'true', 'false', 'token_par_izq'],
                 'OBCOM': ['token_menor_igual', 'token_menor', 'token_mayor_igual', 'token_mayor'],
-                'EARI': ['token_integer', 'token_float', 'id', 'token_mas', 'token_menos', 'token_par_izq'],
+                'EARI': ['token_integer', 'token_float', 'id', 'token_par_izq'],
                 'EARIP': diccToken,
                 'OPSUM': ['token_mas', 'token_menos'],
                 'EMUL': ['token_integer', 'token_float', 'id', 'token_par_izq'],
@@ -453,7 +607,7 @@ predictions = { 'MULASIG': ['id'],
                 #Expresion booleana
                 'FIN': []
               }
-
+"""
 
 for token in diccToken:
 
