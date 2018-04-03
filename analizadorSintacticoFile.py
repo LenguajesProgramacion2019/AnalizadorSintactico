@@ -500,6 +500,75 @@ def INPUT():
         match('token_string')
     READ()
 
+def BUCLE():
+    global token
+    print('BUCLE')
+    if token == 'for':
+        match('for')
+        match('id')
+        ARRAY()
+    elif token == 'token_llave_izq':
+        match('token_llave_izq')
+        BLOCK()
+    elif token == 'token_llave_der':
+        match('token_llave_der')
+        BLOCK()
+
+def ARRAY():
+    global token
+    print('ARRAY')
+    if token == 'token_cor_izq':
+        match('token_cor_izq')
+        ARRELE()
+    elif token == 'token_cor_der':
+        match('token_cor_der')
+        BLOCK()
+
+def ARRELE():
+    global token
+    print("ARRELE")
+    SENTENCE()
+    ARRELEP()
+
+def ARRELEP():
+    global token
+    print("ARRELEP")
+    if token == 'token_comma':
+        match('token_coma')
+        ARRELE()
+    else:
+        ARRAY()
+
+def STRUC():
+    global token
+    print('STRUC')
+    if token == 'token_llave_izq':
+        match('token_llave_izq')
+        STRUCELE()
+    elif token == 'token_llave_der':
+        match('token_llave_der')
+        BLOCK()
+
+def STRUCELE():
+    global token
+    print('STRUCELE')
+    if token == 'id':
+        match('id')
+        match('token_dosp')
+        ELE()
+    else:
+        STRUCELEP()
+
+def STRUCELEP():
+    global token
+    print('STRUCELEP')
+    if token == "token_coma":
+        match('token_coma')
+        STRUCELE()
+    else:
+        STRUC()
+
+
 def BB(token):
     if token == 'token_not' or token == 'true' or token == 'false' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id':
         EBAND(token)
