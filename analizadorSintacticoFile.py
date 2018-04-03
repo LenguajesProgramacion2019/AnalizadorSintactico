@@ -284,37 +284,160 @@ print(diccToken)
 global no_terminal
 global derivation_chain
 global token
+global cont
+
 token = diccToken[0]
 
 def PROGRAMA():
-    print("PROGRAMA")
     global token
-    if token == 'funcion' or token== 'id':
-        SENTENCE()
+    print("PROGRAMA")
+    if token == 'funcion':
+        FUNCTIONSECT()
+    elif token== 'id' or token == 'log' or token == 'id' or token == 'log' or token == 'for' or token == 'while' or token == 'if' or token == 'leer' or token == 'import' or token == 'desde':
+        MODULE()
     elif token == 'eol':
         match('eol')
         PROGRAMA()
-def FUNC():
-    print("FUNC")
-    global token
-    if token == 'funcion':
-        a = 1
 
-def SENTENCE():
-    print("SENTENCE")
+def  FUNCTIONSECT():
     global token
-    if token == 'id':
-        ASSIGN()
-def ASSIGN():
-    print("ASSIGN")
+    print("FUNCTIONSECT")
+    if token== 'funcion':
+        FUNCTION()
+    else:
+        PROGRAMA()
+
+
+def FUNCTION():
     global token
+    global cont
+    print("FUNCTION")
+    if token == 'funcion':
+        match('funcion')
+        match('id')
+        match('token_par_izq')
+        ARGDEC()
+    elif token == 'token_par_der':
+        match('token_par_der')
+        match('eol')
+        BLOCK()
+    elif token == "retorno":
+        RETURN()
+    elif token == "end":
+        match("end")
+        match("funcion")
+        match('eol')
+        FUNCTIONSECT()
+
+def ARGDEC():
+    global token
+    print("ARGDEC")
     if token == 'id':
         match('id')
-        match('token_assign')
-        ASSIGNP()
+        ARGDECP()
+
+def ARGDECP():
+    global token
+    print("ARGDECP")
+    if token == 'token_coma':
+        match('token_coma')
+        ARGDEC()
+    else:
+        FUNCTION()
+
+def RETURN():
+    global token
+    print("RETURN")
+    if token == 'retorno':
+        match('retorno')
+        match('token_par_izq')
+        SENTENCE()
+    elif token == 'token_par_der':
+        match('token_par_der')
+        match('eol')
+        FUNCTION()
+
+def MODULE():
+    global token
+    print('MODULE')
+    if token == 'import' or token == 'desde':
+        match('import')
+        ID()
+    elif token == "desde" or token == "import":
+        IMPORT()
+
+
+def IMPORT():
+    global token
+    print('IMPORT')
+    if token=="import":
+        match('import')
+        ID()
+    elif token == 'desde':
+        match('desde')
+        match('id')
+        match('import')
+        match('id')
+        MODULE()
+
+def ID():
+    global token
+    print('ID')
+    if token == 'token_point':
+        match('token_point')
+        ID()
+    elif token == 'id':
+        match('id')
+        ID
+    else:
+        MODULE()
+
+
+def BLOCK():
+    global token
+    global cont
+    print('BLOCK')
+    if token == 'id':
+        match('id')
+        BLOCKP()
+    if token == ('log'):
+        PRINT()
+    elif token == ('leer'):
+        READ()
+    elif token == 'for':
+        BUCLE()
+    elif token == 'if':
+        IF()
+    elif token == 'while':
+        WHILE()
+
+def BLOCKP():
+    global token
+    print('BLOCKP')
+    if token == 'token_par_der':
+        CALLFUNC()
+    elif token == 'token_assign':
+        ASSIGN()
+
+def CALLFUNC():
+    global token
+    print('CALLFUNC')
+    if token == 'token_par_izq':
+        match('token_par_izq')
+        SENTENCE()
+    elif token == 'token_par_der':
+        match('token_par_der')
+        MODULE()
+
+def ASSIGN():
+    global token
+    print("ASSIGN")
+    match('token_assign')
+    SENTENCE()
+
 def ASSIGNP():
     global token
-    print("ASSIGNP", token)
+    #print("ASSIGNP", token)
     if token == 'token_integer':
         match('token_integer')
     elif token == 'token_float':
@@ -322,6 +445,61 @@ def ASSIGNP():
     elif token == 'token_string':
         match('token_string')
     PROGRAMA()
+
+def SENTENCE():
+    global token
+    global cont
+    print('SENTENCE')
+    while diccToken[cont] != 'token_par_der':
+        cont += 1
+    token = diccToken[cont]
+    RETURN()
+
+def PRINT():
+    global token
+    print('PRINT')
+    if token == 'log':
+        match('log')
+        match('token_par_izq')
+        OUTPUT()
+    elif token == 'token_par_der':
+        match('token_par_der')
+        MODULE()
+
+def OUTPUT():
+    global token
+    SENTENCE()
+    OUTPUTP()
+
+def OUTPUTP():
+    global  token
+    if token == 'token_mas':
+        match('token_mas')
+        OUTPUT()
+    else:
+        MODULE()
+
+def READ():
+    global token
+    print('READ')
+    if token == 'leer':
+        match('log')
+        match('token_par_izq')
+        INPUT()
+    elif token == 'token_par_der':
+        match('token_par_der')
+        MODULE()
+
+def INPUT():
+    global token
+    if token == 'token_integer':
+        match('token_integer')
+    if token == 'token_float':
+        match('token_float')
+    if token == 'token_string':
+        match('token_string')
+    READ()
+
 def BB(token):
     if token == 'token_not' or token == 'true' or token == 'false' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id':
         EBAND(token)
@@ -470,7 +648,6 @@ def E(token):
     else:
         print('Error E')
 
-global cont
 cont=0
 def match(espectedToken):
     global token
@@ -486,6 +663,7 @@ def match(espectedToken):
         exit(0)
     else:
         token = diccToken[cont]
+        print('\n token:'+token)
 
 def errorSintaxis(espectedToken):
     a = 1
