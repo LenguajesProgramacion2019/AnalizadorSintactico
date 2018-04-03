@@ -290,19 +290,19 @@ token = diccToken[0]
 
 def PROGRAMA():
     global token
-    if token == 'funcion' or token== 'id' or token == 'log' or token == 'for' or token == 'while' or token == 'token_par_izq' or token == 'if' or token == 'leer' or token == 'import' or token == 'desde':
+    if token == 'funcion' or token== 'id' or token == 'log' or token == 'for' or token == 'while' or token == 'if' or token == 'leer' or token == 'import' or token == 'desde':
         FUNCTIONSECT()
         MODULE()
     else:
         print("Error PROGRAMA()")
 
 
-def  FUNCTIONSECT():
+def FUNCTIONSECT():
     global token
     if token == 'funcion':
         FUNCTION()
         FUNCTIONSECT()
-    elif token == 'id' or token == 'log' or token == 'for' or token == 'while' or token == 'token_par_izq' or token == 'if' or token == 'leer' or token == 'import' or token == 'desde':
+    elif token == 'id' or token == 'log' or token == 'for' or token == 'while' or token == 'if' or token == 'leer' or token == 'import' or token == 'desde':
         pass
     else:
         print("Error FUNCTIONSECT")
@@ -310,46 +310,51 @@ def  FUNCTIONSECT():
 
 def FUNCTION():
     global token
-    match('funcion')
-    match('id')
-    match('token_par_izq')
-    ARGDEC()
-    match('token_par_der')
-    match('eol')
-    BLOCK()
-    RETURN()
-    match("end")
-    match("funcion")
-    match('eol')
-    FUNCTIONSECT()
+    if token == 'funcion':
+        match('funcion')
+        match('id')
+        match('token_par_izq')
+        SENTENCE()
+        match('token_par_der')
+        match('eol')
+        BLOCK()
+        RETURN()
+        match("end")
+        match("funcion")
+        match('eol')
+    else:
+        print("Error FUNCTION")
 
 def ARGDEC():
     global token
-    print("ARGDEC")
     if token == 'id':
         match('id')
         ARGDECP()
+    else:
+        print("Error ARGDEC")
 
 def ARGDECP():
     global token
-    print("ARGDECP")
     if token == 'token_coma':
         match('token_coma')
         ARGDEC()
+    elif token == 'token_par_der':
+        pass
     else:
-        FUNCTION()
+        print("Error ARGDECP")
 
 def RETURN():
     global token
-    print("RETURN")
     if token == 'retorno':
         match('retorno')
         match('token_par_izq')
         SENTENCE()
-    elif token == 'token_par_der':
         match('token_par_der')
         match('eol')
-        FUNCTION()
+    elif token == 'end':
+        pass
+    else:
+        print("Error RETURN")
 
 def MODULE():
     global token
@@ -362,7 +367,6 @@ def MODULE():
 
 def IMPORT():
     global token
-    print('IMPORT')
     if token=="import":
         match('import')
         ID()
@@ -371,7 +375,8 @@ def IMPORT():
         match('id')
         match('import')
         match('id')
-        MODULE()
+    else:
+        print("Error IMPORT")
 
 def ID():
     global token
@@ -381,15 +386,15 @@ def ID():
         ID()
     elif token == 'id':
         match('id')
-        ID
     else:
-        MODULE()
+        print("Error ID")
 
 
 def BLOCK():
     global token
     if token == 'id':
-        ASSIGN()
+        match('id')
+        ASSICALL()
     if token == ('log'):
         PRINT()
     elif token == ('leer'):
@@ -403,38 +408,17 @@ def BLOCK():
     else:
         print("Error BLOCK")
 
-def BLOCKP():
+def ASSICALL():
     global token
-    print('BLOCKP')
-    if token == 'token_par_der':
-        CALLFUNC()
-    elif token == 'token_assign':
+    if token == 'token_assign':
         ASSIGN()
-
-def CALLFUNC():
-    global token
-    print('CALLFUNC')
-    if token == 'token_par_izq':
-        match('token_par_izq')
-        SENTENCE()
-    elif token == 'token_par_der':
-        match('token_par_der')
-        MODULE()
-
-def ASSIGN():
-    global token
-    if token == 'id':
-        match('id')
-        match('token_assign')
-        SENTENCE()
+    elif token == 'token_par_izq':
+        CALLFUNC()
     else:
-        print("Error ASSIGN")
-
+        print("Error ASSICALL")
 
 def SENTENCE():
     global token
-    print('SENTENCE')
-
     if token == 'token_not' or token == 'token_par_der' or token == 'token_integer' or token == 'token_float' or token == 'true' or token == 'false':
         BB()
     elif token == 'id':
@@ -442,20 +426,37 @@ def SENTENCE():
         SENTENCEP()
     elif token == 'token_string':
         match('token_string')
-    elif token == '[':
+    elif token == 'token_cor_izq':
         ARRAY()
-    elif token == '{':
+    elif token == 'token_llave_izq':
         STRUC()
+    else:
+        print("Error SENTENCE"
 
 def SENTENCEP():
-    global token
-    print('SENTENCEP')
-    if token == 'token_par_der':
+    if token == 'token_par_izq':
         CALLFUNC()
     elif token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'true' or token == 'false':
         BB()
     else:
         print("Error SENTENCEP")
+
+def CALLFUNC():
+    global token
+    if token == 'token_par_izq':
+        match('token_par_izq')
+        SENTENCE()
+        match('token_par_der')
+    else:
+        print("Error CALLFUNC")
+
+def ASSIGN():
+    global token
+    if token == 'token_assign':
+        match('token_assign')
+        SENTENCE()
+    else:
+        print("Error ASSIGN")
 
 def PRINT():
     global token
