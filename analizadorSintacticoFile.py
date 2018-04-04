@@ -446,6 +446,8 @@ def SENTENCEP():
         CALLFUNC()
     elif token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'true' or token == 'false':
         BB()
+    elif token=='token_coma' or token == 'token_mas' or token == 'token_par_der' or token == 'token_llave_der':
+        pass
     else:
         print("Error SENTENCEP")
 
@@ -474,6 +476,7 @@ def PRINT():
         match('token_par_izq')
         OUTPUT()
         match('token_par_der')
+        match('eol')
     else:
         print("Error PRINT")
 
@@ -486,7 +489,7 @@ def OUTPUT():
         print("Error OUTPUT")
 
 def OUTPUTP():
-    global  token
+    global token
     if token == 'token_mas':
         match('token_mas')
         OUTPUT()
@@ -584,24 +587,13 @@ def BBP():
     global token
     if token == 'or':
         token = match('or')
-        BBP2()
-    elif token == 'token_par_der' or token == 'token_coma' or 'token_mas' or 'token_par_izq' or token == 'retorno':
+        BB()
+    elif token == 'token_par_der' or token == 'token_coma' or 'token_mas' or 'token_llave_der':
         pass
     else:
         print("error BBP")
 
-def BBP2():
-    global token
-    print("BBP2")
 
-    if token == 'token_par_izq':
-        match('token_par_izq')
-        BB()
-        match('token_par_der')
-    elif token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'true' or token == 'false':
-        BB()
-    else:
-        print("error BB")
 
 def EBAND():
     global token
@@ -613,9 +605,9 @@ def EBAND():
 
 def EBANDP():
     global token
-    if token == 'and':
-        match('and')
-        EBANDP2(token)
+    if token == 'token_and':
+        match('token_and')
+        EBANDP2()
     elif token == 'token_par_der' or token == 'token_or' or token == 'token_coma' or 'token_mas' or 'token_par_izq' or token == 'retorno':
         pass
     else:
@@ -623,13 +615,12 @@ def EBANDP():
 
 def EBANDP2():
     global token
-    print('EBANDP2')
     if token == 'token_par_izq':
         match('token_par_izq')
         EBAND()
         match('token_par_der')
     elif token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'true' or token == 'false':
-        pass
+        EBAND()
     else:
         print("error token EBANDP2")
 
@@ -647,28 +638,17 @@ def EB():
 def EBP():
     if token == 'token_igual_num' or token == 'token_diff_num':
         OBIGU()
-        EBP3()
+        EBP2()
     elif token == 'token_par_der' or token == 'token_and' or token == 'token_or' or token == 'token_coma' or token == 'token_mas' or token == 'token_par_der' or token == 'retorno' or token == 'eol':
         pass
     else:
         print("Error EBP")
 
-def EBP3():
-    global token
-    if token == 'token_par_izq':
-        match('token_par_izq')
-        EB()
-        match('token_par_der')
-    elif token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'true' or token == 'false':
-        pass
-    else:
-        print("EBP3")
-
 def EBP2():
     global token
     if token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'true' or token == 'false':
         EB()
-    elif token == 'token_par_der':
+    elif token == 'token_par_izq':
         match('token_par_izq')
         EB()
         match('token_par_der')
@@ -688,18 +668,18 @@ def EBCOM():
     global token
     if token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id':
         EARI()
-        OBCOMP()
+        EBCOMP()
     elif token == 'true' or token == 'false':
         BOOL()
     else:
         print("Error EBCOM")
 
-def OBCOMP():
+def EBCOMP():
     global token
     if token == 'token_menor' or token == 'token_mayor' or token == 'token_menor_igual' or token == 'token_mayor_igual':
         OBCOM()
         EARI()
-    elif token == 'token_igual_num' or token == 'token_diff_num' or token == 'token_par_der' or token == 'token_and' or token == 'token_or ' or token == 'token_coma' or token == 'token_mas' or token == 'token_menos' or token == 'token_llave_der' or token == 'else' or token == 'token_llave_izq' or token == 'retorno' or token == 'eol':
+    elif token == 'token_igual_num' or token == 'token_diff_num' or token == 'token_par_der' or token == 'token_and' or token == 'token_or ' or token == 'token_coma' or token == 'token_mas' or token == 'token_llave_der' or token == 'else' or token == 'token_par_izq' or token == 'retorno' or token == 'eol':
         pass
     else:
         print("Error OBCOMP")
@@ -718,9 +698,9 @@ def OBCOM():
         match('token_menor')
     elif token == 'token_mayor':
         match('token_mayor')
-    if token == 'token_menor_igual':
+    elif token == 'token_menor_igual':
         match('token_menor_igual')
-    if token == 'token_mayor_igual':
+    elif token == 'token_mayor_igual':
         match('token_mayor_igual')
     else:
         print("Error OBCOM")
@@ -777,7 +757,7 @@ def EMULP():
     if token == 'token_div' or token == 'token_mul' or token == 'token_mod':
         OPMUL()
         EMUL()
-    elif token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'eol':
+    elif token == 'token_par_der' or token == 'token_mas' or token == 'token_menos' or token == 'token_menor' or token == 'token_mayor' or token == 'token_menor_igual' or token == 'token_mayor_igual' or token == 'token_igual_num' or token == 'token_diff_num'  or token == 'token_and' or token == 'token_or' or token == 'token_coma'  or token == 'token_llave_der'  or token == 'token_else' or token == 'token_par_izq' or token == 'retorno' or token == 'eol':
         pass
     else:
         print("Error EMULP")
@@ -878,7 +858,7 @@ cont=0
 def match(espectedToken):
     global token
     global cont
-    print("match", espectedToken, token)
+    #print("match", espectedToken, token)
     if(token == espectedToken):
         cont+=1
     else:
@@ -889,7 +869,7 @@ def match(espectedToken):
         exit(0)
     else:
         token = diccToken[cont]
-        print('\n token:'+token)
+        #print('\n token:'+token)
 
 def errorSintaxis(espectedToken):
     a = 1
