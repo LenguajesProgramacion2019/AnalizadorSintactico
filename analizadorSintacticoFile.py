@@ -384,8 +384,10 @@ def ID():
     if token == 'token_point':
         match('token_point')
         ID()
+        MODULE()
     elif token == 'id':
         match('id')
+        MODULE()
     else:
         print("Error ID")
 
@@ -395,16 +397,22 @@ def BLOCK():
     if token == 'id':
         match('id')
         ASSICALL()
+        MODULE()
     if token == ('log'):
         PRINT()
+        MODULE()
     elif token == ('leer'):
         READ()
+        MODULE()
     elif token == 'for':
         BUCLE()
+        MODULE()
     elif token == 'if':
         IF()
+        MODULE()
     elif token == 'while':
         WHILE()
+        MODULE()
     else:
         print("Error BLOCK")
 
@@ -431,7 +439,7 @@ def SENTENCE():
     elif token == 'token_llave_izq':
         STRUC()
     else:
-        print("Error SENTENCE"
+        print("Error SENTENCE")
 
 def SENTENCEP():
     if token == 'token_par_izq':
@@ -455,162 +463,125 @@ def ASSIGN():
     if token == 'token_assign':
         match('token_assign')
         SENTENCE()
+        match('eol')
     else:
         print("Error ASSIGN")
 
 def PRINT():
     global token
-    print('PRINT')
     if token == 'log':
         match('log')
         match('token_par_izq')
         OUTPUT()
-    elif token == 'token_par_der':
         match('token_par_der')
-        MODULE()
+    else:
+        print("Error PRINT")
 
 def OUTPUT():
     global token
-    SENTENCE()
-    OUTPUTP()
+    if token == 'id' or token == 'token_string' or token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'true' or token == 'false' or token == 'token_llave_izq':
+        SENTENCE()
+        OUTPUTP()
+    else:
+        print("Error OUTPUT")
 
 def OUTPUTP():
     global  token
     if token == 'token_mas':
         match('token_mas')
         OUTPUT()
+    elif token == 'token_par_der':
+        pass
     else:
-        MODULE()
+        print("Error OUTPUTP")
 
 def READ():
     global token
-    print('READ')
     if token == 'leer':
-        match('log')
+        match('leer')
         match('token_par_izq')
         INPUT()
-    elif token == 'token_par_der':
         match('token_par_der')
-        MODULE()
+    else:
+        print("Error READ")
 
 def INPUT():
     global token
     if token == 'token_integer':
         match('token_integer')
-    if token == 'token_float':
+    elif token == 'token_float':
         match('token_float')
-    if token == 'token_string':
+    elif token == 'token_string':
         match('token_string')
-    READ()
-
-def BUCLE():
-    global token
-    print('BUCLE')
-    if token == 'for':
-        match('for')
-        match('id')
-        ARRAY()
-    elif token == 'token_llave_izq':
-        match('token_llave_izq')
-        BLOCK()
-    elif token == 'token_llave_der':
-        match('token_llave_der')
-        BLOCK()
-
-def IF():
-    global token
-    print('IF')
-    if token == 'if':
-        match('if')
-        match('token_par_izq')
-        BB()
-    if token == ('token_par_der'):
-        match('token_par_der')
-        ELSE()
-
-def ELSE():
-    global token
-    print('ELSE')
-    if token == 'else':
-        match('else')
-        ELSEP()
     else:
-        BLOCK()
-
-def ELSEP():
-    global token
-    print('ELSEP')
-    if token =='if':
-        IF()
-    else:
-        BLOCK()
+        print("Error INPUT")
 
 def ARRAY():
     global token
-    print('ARRAY')
     if token == 'token_cor_izq':
         match('token_cor_izq')
         ARRELE()
-    elif token == 'token_cor_der':
         match('token_cor_der')
-        BLOCK()
+    else:
+        print("Error ARRAY")
 
 def ARRELE():
     global token
-    print("ARRELE")
-    SENTENCE()
-    ARRELEP()
+    if token == 'id' or token == 'token_string' or token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'true' or token == 'false' or token == 'token_llave_izq':
+        SENTENCE()
+        ARRELEP()
+    else:
+        print("Error ARRELE")
 
 def ARRELEP():
     global token
-    print("ARRELEP")
     if token == 'token_comma':
         match('token_coma')
         ARRELE()
+    elif token == 'token_cor_der':
+        pass
     else:
-        ARRAY()
+        print("Error ARRELEP")
 
 def STRUC():
     global token
-    print('STRUC')
     if token == 'token_llave_izq':
         match('token_llave_izq')
         STRUCELE()
-    elif token == 'token_llave_der':
         match('token_llave_der')
-        BLOCK()
+    else:
+        print("Error STRUC")
 
 def STRUCELE():
     global token
-    print('STRUCELE')
     if token == 'id':
         match('id')
         match('token_dosp')
-        ELE()
-    else:
+        SENTENCE()
         STRUCELEP()
+    else:
+        print("Error STRUCELE")
 
 def STRUCELEP():
     global token
-    print('STRUCELEP')
-    if token == "token_coma":
+    if token == 'token_comma':
         match('token_coma')
         STRUCELE()
+    elif token == 'token_llave_der':
+        pass
     else:
-        STRUC()
-
+        print("Error STRUCELEP")
 
 def BB():
     global token
-    print("BB")
     if token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'true' or token == 'false':
         EBAND()
         BBP()
+    else:
+        print("Error BB")
 
 def BBP():
     global token
-    print("BBP")
-
     if token == 'or':
         token = match('or')
         BBP2()
@@ -634,7 +605,6 @@ def BBP2():
 
 def EBAND():
     global token
-    print("EBAND")
     if token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'true' or token == 'false':
         EB()
         EBANDP()
@@ -643,7 +613,6 @@ def EBAND():
 
 def EBANDP():
     global token
-    print("EBANDP")
     if token == 'and':
         match('and')
         EBANDP2(token)
@@ -679,7 +648,7 @@ def EBP():
     if token == 'token_igual_num' or token == 'token_diff_num':
         OBIGU()
         EBP3()
-    elif token == 'token_par_der' or token == 'token_and' or token == 'token_or' or token == 'token_coma' or token == 'token_mas' or token == 'token_par_der' or token == 'retorno':
+    elif token == 'token_par_der' or token == 'token_and' or token == 'token_or' or token == 'token_coma' or token == 'token_mas' or token == 'token_par_der' or token == 'retorno' or token == 'eol':
         pass
     else:
         print("Error EBP")
@@ -725,6 +694,16 @@ def EBCOM():
     else:
         print("Error EBCOM")
 
+def OBCOMP():
+    global token
+    if token == 'token_menor' or token == 'token_mayor' or token == 'token_menor_igual' or token == 'token_mayor_igual':
+        OBCOM()
+        EARI()
+    elif token == 'token_igual_num' or token == 'token_diff_num' or token == 'token_par_der' or token == 'token_and' or token == 'token_or ' or token == 'token_coma' or token == 'token_mas' or token == 'token_menos' or token == 'token_llave_der' or token == 'else' or token == 'token_llave_izq' or token == 'retorno' or token == 'eol':
+        pass
+    else:
+        print("Error OBCOMP")
+
 def BOOL():
     global token
     if token == 'true':
@@ -734,7 +713,7 @@ def BOOL():
     else:
         print("Error BOOL")
 
-def OBCOM(token):
+def OBCOM():
     if token == 'token_menor':
         match('token_menor')
     elif token == 'token_mayor':
@@ -788,8 +767,8 @@ def EMUL():
         EMUL()
         match('token_par_der')
     elif token == 'token_integer' or token == 'token_float' or token == 'id':
-        E(token)
-        EMULP(token)
+        E()
+        EMULP()
     else:
         print("Error EMUL")
 
@@ -798,7 +777,7 @@ def EMULP():
     if token == 'token_div' or token == 'token_mul' or token == 'token_mod':
         OPMUL()
         EMUL()
-    elif token == 'token_integer' or token == 'token_float' or token == 'id':
+    elif token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'eol':
         pass
     else:
         print("Error EMULP")
@@ -839,9 +818,63 @@ def EP():
         match('id')
         E()
 
+def BUCLE():
+    global token
+    if token == 'for':
+        match('for')
+        match('id')
+        match('in')
+        ARRAY()
+        match('token_llave_izq')
+        BLOCK()
+        match('token_llave_der')
+    else:
+        print("Error BUCLE")
+
+def IF():
+    global token
+    if token == 'if':
+        match('if')
+        match('token_par_izq')
+        BB()
+        match('token_par_der')
+        ELSE()
+    else:
+        print("Error IF")
+
+def ELSE():
+    global token
+    if token == 'else':
+        match('else')
+        ELSEP()
+    elif token == 'token_llave_der' or token == 'token_par_izq' or token == 'retorno':
+        pass
+    else:
+       print("Error ELSE")
+
+def ELSEP():
+    global token
+    if token =='if':
+        IF()
+    elif token == 'token_llave_der' or token == 'token_par_izq' or token == 'retorno':
+        pass
+    else:
+        print("Error ELSEP")
+
+def WHILE():
+    global token
+    if token == 'while':
+        match('while')
+        match('token_par_izq')
+        BB()
+        match('token_par_der')
+        match('eol')
+        BLOCK()
+
 
 
 cont=0
+
 def match(espectedToken):
     global token
     global cont
