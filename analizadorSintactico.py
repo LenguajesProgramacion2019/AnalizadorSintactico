@@ -260,7 +260,7 @@ def delta(column, char, state):
 
 
 
-line = raw_input()
+line = input()
 #for line in lines:
 while line != 'wea':
     i = 0
@@ -272,7 +272,7 @@ while line != 'wea':
         print("Error lexico(linea:" + str(row) + ",posicion:" + str(i - len(lexeme)) + ")")
         exit(0)
 
-    line = raw_input()
+    line = input()
     row += 1
 
 #print(diccLexema)
@@ -280,8 +280,8 @@ while line != 'wea':
 
 global no_terminal
 global derivation_chain
-no_terminal = 'BB' #token inicial de la gramatica
-derivation_chain = ['BB'] #token inicial de la gramatica
+no_terminal = 'BB' #token inicial de la gramática
+derivation_chain = ['BB'] #token inicial de la gramática
 
 
 def derivation (token):

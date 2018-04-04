@@ -488,7 +488,7 @@ def PRINT():
 def OUTPUT():
     global token
     if token == 'id' or token == 'token_string' or token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'true' or token == 'false' or token == 'token_llave_izq':
-        E()
+        SENTENCE()
         OUTPUTP()
     else:
         print("Error OUTPUT")
@@ -809,14 +809,30 @@ def BUCLE():
         match('for')
         match('id')
         match('in')
-        ARRAY()
-        match('token_llave_izq')
-        match('eol')
-        BLOCK()
-        match('token_llave_der')
-        match('eol')
+        BUCLEP()
     else:
         print("Error BUCLE")
+
+def BUCLEP():
+    global token
+    if token == 'id':
+        match('id')
+        BUCLEPP()
+    elif token == 'token_cor_izq':
+        ARRAY()
+        BUCLEPP()
+    else:
+        print("Error BUCLEP")
+
+def BUCLEPP():
+    global token
+    if token == 'token_llave_izq':
+        match('token_llave_izq')
+        MODULE()
+        match('token_llave_der')
+    elif token == 'eol':
+        match('eol')
+        BLOCK()
 
 def IF():
     global token
@@ -825,9 +841,22 @@ def IF():
         match('token_par_izq')
         BB()
         match('token_par_der')
+        IFP()
         ELSE()
     else:
         print("Error IF")
+
+def IFP():
+    global token
+    if token == 'token_llave_izq':
+        match('token_llave_izq')
+        MODULE()
+        match('token_llave_der')
+    elif token == 'eol':
+        match('eol')
+        BLOCK()
+    else:
+        print("ERRROR IFP")
 
 def ELSE():
     global token
@@ -855,8 +884,21 @@ def WHILE():
         match('token_par_izq')
         BB()
         match('token_par_der')
+        WHILEP()
+    else:
+        print("error WHILE")
+
+def WHILEP():
+    global token
+    if token == 'eol':
         match('eol')
         BLOCK()
+    elif token == 'token_llave_izq':
+        match('token_llave_izq')
+        MODULE()
+        match('token_llave_der')
+    else:
+        print("error WHILE") 
 
 
 
