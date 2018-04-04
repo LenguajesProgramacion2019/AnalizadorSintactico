@@ -302,7 +302,7 @@ def FUNCTIONSECT():
     if token == 'funcion':
         FUNCTION()
         FUNCTIONSECT()
-    elif token == 'id' or token == 'log' or token == 'for' or token == 'while' or token == 'if' or token == 'leer' or token == 'import' or token == 'desde':
+    elif token == 'id' or token == 'log' or token == 'for' or token == 'while' or token == 'if' or token == 'leer' or token == 'import' or token == 'desde' or token == 'eol':
         pass
     else:
         print("Error FUNCTIONSECT")
@@ -314,7 +314,7 @@ def FUNCTION():
         match('funcion')
         match('id')
         match('token_par_izq')
-        SENTENCE()
+        ARGDEC()
         match('token_par_der')
         match('eol')
         BLOCK()
@@ -364,6 +364,9 @@ def MODULE():
     elif token == 'id' or token == 'log' or token == 'for' or token == 'while' or token == 'token_par_izq' or token == 'if' or token == 'leer':
         BLOCK()
         MODULE()
+    elif token == 'eol':
+        match('eol')
+        MODULE()
     else:
         print("Error MODULE")
 
@@ -406,6 +409,8 @@ def BLOCK():
         IF()
     elif token == 'while':
         WHILE()
+    elif token == 'token_cor_der' or token == 'token_llave_der' or token == 'token_par_izq' or token == 'retorno' or token == 'eol':
+        pass
     else:
         print("Error BLOCK")
 
@@ -427,10 +432,10 @@ def SENTENCE():
             match('id')
             CALLFUNC()
         elif diccToken[cont+1] == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'id' or token == 'true' or token == 'false':
+            print("i was here")
             BB()
         elif token == 'token_coma' or token == 'token_mas' or token == 'token_par_der' or token == 'token_cor_der' or token == 'token_llave_der':
             match('id')
-
     elif token == 'token_string':
         match('token_string')
     elif token == 'token_cor_izq':
@@ -445,9 +450,20 @@ def CALLFUNC():
     if token == 'token_par_izq':
         match('token_par_izq')
         SENTENCE()
+        CALLFUNCP()
         match('token_par_der')
     else:
         print("Error CALLFUNC")
+
+def CALLFUNCP():
+    global token
+    if token == 'token_coma':
+        match('token_coma')
+        SENTENCE()
+    elif token == 'token_par_der':
+        pass
+    else:
+        print("Error CALLFUNCP")
 
 def ASSIGN():
     global token
@@ -472,7 +488,7 @@ def PRINT():
 def OUTPUT():
     global token
     if token == 'id' or token == 'token_string' or token == 'token_not' or token == 'token_par_izq' or token == 'token_integer' or token == 'token_float' or token == 'true' or token == 'false' or token == 'token_llave_izq':
-        SENTENCE()
+        E()
         OUTPUTP()
     else:
         print("Error OUTPUT")
@@ -849,7 +865,7 @@ cont=0
 def match(espectedToken):
     global token
     global cont
-    #print("match", espectedToken, token)
+    print("match", espectedToken, token)
     if(token == espectedToken):
         cont+=1
     else:
@@ -860,7 +876,7 @@ def match(espectedToken):
         exit(0)
     else:
         token = diccToken[cont]
-        #print('\n token:'+token)
+        print('\n token:'+token)
 
 def errorSintaxis(espectedToken):
     a = 1
