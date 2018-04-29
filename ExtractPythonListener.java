@@ -34,6 +34,31 @@ public class ExtractPythonListener extends TLBaseListener {
 	}
 	
 	@Override
+	public void exitSi_bloque (TLParser.Si_bloqueContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+		
+		String condicional = tokens.getText(ctx.si().expresion_condicional());
+		System.out.println("if " + condicional + ":");
+		
+		String modulo = tokens.getText(ctx.si().module());
+		System.out.println("   " + modulo);
+		
+		if (ctx.sino_si().expresion_condicional() != null){
+			condicional = tokens.getText(ctx.sino_si().expresion_condicional());
+			System.out.println("elif " + condicional + ":");
+			
+			modulo = tokens.getText(ctx.sino_si().module());
+			System.out.println("   " + modulo);
+		}
+		
+		if (ctx.sino().module() != null){
+			System.out.println("else:");
+			modulo = tokens.getText(ctx.sino().module());
+			System.out.println("   " + modulo);
+		}
+	}
+	
+	@Override
 	public void exitAssignment(TLParser.AssignmentContext ctx){
 		TokenStream tokens = parser.getTokenStream();
 		String expresion = tokens.getText(ctx.assign());

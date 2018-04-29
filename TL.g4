@@ -1,7 +1,7 @@
 grammar TL;
 
 //saltar tabs y spacaes
-WS : [ \t\r]+ -> skip; 
+WS : [ \t\r\n]+ -> skip; 
 COMMENTS : '#' [a-zA-Z0-9 ()]* -> skip;
 
 programa : funcion_seccion module;
@@ -9,16 +9,16 @@ programa : funcion_seccion module;
 
 funcion_seccion: funcion funcion_seccion
 			   | funcion
-			   | '\n'
+			   | 
 			   |
 			   ;
-funcion : 'funcion' name '(' arg_declaracion ')' '\n' block '\n' retorno 'end' 'funcion' '\n'
-        | 'funcion' name '(' arg_declaracion ')' '\n' retorno 'end' 'funcion' '\n' ;
+funcion : 'funcion' name '(' arg_declaracion ')'  block  retorno 'end' 'funcion' 
+        | 'funcion' name '(' arg_declaracion ')'  retorno 'end' 'funcion'  ;
 name : ID;
 arg_declaracion: ID
 			   | ID ',' arg_declaracion
 			   ;
-retorno: 'retorno' '(' sentence ')' '\n'
+retorno: 'retorno' '(' sentence ')' 
 	  | 
 	  ;
 			   
@@ -29,7 +29,7 @@ block: assignment
 	 | si_bloque
 	 | mientras
 	 | sentence
-	 | '\n';			
+	 ;			
 sentence : expresion_condicional
 		| callfunc
 		| array
@@ -123,24 +123,23 @@ parametros : sentence
 		   | sentence ',' parametros;
 
 bucle : 'for' ID 'in' iter '{' module '}'
-      | 'for' ID 'in' iter '\n' '{' module '}'
-	  | 'for' ID 'in' iter '\n' block ;
+      | 'for' ID 'in' iter  '{' module '}'
+	  | 'for' ID 'in' iter  block ;
 	  
-si_bloque : si '\n' sino_si '\n' sino
-		  | si sino_si '\n' sino
-		  | si '\n' sino_si sino
+si_bloque : si  sino_si  sino
+		  | si sino_si  sino
+		  | si  sino_si sino
 		  | si sino_si sino;
 si : 'if' '(' expresion_condicional ')' '{' module '}'
-   | 'if' '(' expresion_condicional ')' '\n' '{' module '}'
-   | 'if' '(' expresion_condicional ')' '\n' module ;   
-sino_si : 'else' 'if' '(' expresion_condicional ')' '{' '\n' module '}' sino_si
-     | 'else' 'if' '(' expresion_condicional ')' '\n' module sino_si
-     | 'else' 'if' '(' expresion_condicional ')' '\n' '{' '\n' module '}' sino_si
+   | 'if' '(' expresion_condicional ')'  module ;   
+sino_si : 'else' 'if' '(' expresion_condicional ')' '{'  module '}' sino_si
+     | 'else' 'if' '(' expresion_condicional ')'  module sino_si
+     | 'else' 'if' '(' expresion_condicional ')'  '{'  module '}' sino_si
      | 
 	 ;
 sino : 'else' '{' module '}'
-	 | 'else' '\n' '{' module '}'
-     | 'else' '\n' module
+	 | 'else'  '{' module '}'
+     | 'else'  module
      |
 	 ;
 
@@ -148,8 +147,8 @@ iter : array
      | ID;
 
 mientras : 'while' '(' expresion_condicional ')' '{' module '}'
-      | 'while' '(' expresion_condicional ')' '\n' '{' module '}'
-      | 'while' '(' expresion_condicional ')' '\n' module;
+      | 'while' '(' expresion_condicional ')'  '{' module '}'
+      | 'while' '(' expresion_condicional ')'  module;
 	  
 
  
