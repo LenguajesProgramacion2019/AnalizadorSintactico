@@ -59,6 +59,19 @@ public class ExtractPythonListener extends TLBaseListener {
 	}
 	
 	@Override
+	public void enterImportar(TLParser.ImportarContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+		String desde = tokens.getText(ctx.assign());
+		import = tokens.getText(ctx.import());
+		desde = tokens.getText(ctx.desde());
+		if(import != null){
+			System.out.println(expresion);	
+		}
+		System.out.println(expresion);
+
+	}
+
+	@Override
 	public void exitAssignment(TLParser.AssignmentContext ctx){
 		TokenStream tokens = parser.getTokenStream();
 		String expresion = tokens.getText(ctx.assign());

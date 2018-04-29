@@ -40,9 +40,13 @@ module : block module
 	   | importar module
 	   |
 	   ;
-	  
-importar: 'import' id_import
-	    | 'desde' ID 'import' ID;
+
+import : 'importar' id_import;
+
+desde : 'desde' ID 'importar' ID;
+
+importar : import
+	    | desde;
 id_import : '.' id_import
 		  | ID;
 
