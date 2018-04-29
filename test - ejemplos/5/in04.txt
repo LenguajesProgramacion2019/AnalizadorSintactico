@@ -1,6 +1,0 @@
-log(4)
-log( "prueba de impresion" )
-leer( num )
-log( num 
-leer( cadena )
-

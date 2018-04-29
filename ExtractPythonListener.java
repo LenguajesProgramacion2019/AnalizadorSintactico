@@ -11,11 +11,33 @@ public class ExtractPythonListener extends TLBaseListener {
 	//public void enterExpresion_aditiva(TLParser.Expresion_aditivaContext ctx){
 	//	System.out.println(ctx.expresion_multiplicativa());
 	//}
+	
+	@Override
+	public void exitFuncion(TLParser.FuncionContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+		
+		String nombre = tokens.getText(ctx.name());
+		String argumentos = tokens.getText(ctx.arg_declaracion());
+		System.out.println("def " + nombre + "( " + argumentos + " ):" );
+		
+		String bloque = "";
+		if (ctx.block() != null){
+			bloque = tokens.getText(ctx.block());
+			System.out.println("   " + bloque);
+		}
+		
+		String retorno = "";
+		if (ctx.retorno().sentence() != null){
+			retorno = tokens.getText(ctx.retorno().sentence());
+			System.out.println("   return " + retorno);
+		}		
+	}
+	
 	@Override
 	public void exitExpresion_aditiva(TLParser.Expresion_aditivaContext ctx){
 		TokenStream tokens = parser.getTokenStream();
 		String expresion = tokens.getText(ctx.expresion_multiplicativa());
-		System.out.println(expresion);
+		//System.out.println(expresion);
 	}
 
 	
