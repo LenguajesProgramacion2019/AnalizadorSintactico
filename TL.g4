@@ -22,7 +22,7 @@ retorno: 'retorno' '(' sentence ')' '\n'
 	  | 
 	  ;
 			   
-block: assign
+block: assignment
      | escribir
 	 | leer
 	 | bucle
@@ -45,6 +45,8 @@ importar: 'import' id_import
 	    | 'desde' ID 'import' ID;
 id_import : '.' id_import
 		  | ID;
+
+assignment : assign ; 
 
 assign : ID '=' sentence
 	   | call_array '=' sentence
@@ -74,7 +76,7 @@ expresion_relacional : expresion_aditiva
                      | expresion_relacional '>' expresion_aditiva
                      | expresion_relacional '<=' expresion_aditiva
                      | expresion_relacional '>=' expresion_aditiva ;
-					 
+
 expresion_aditiva : expresion_multiplicativa
 				  | '-' expresion_multiplicativa
                   | expresion_aditiva '+' expresion_multiplicativa

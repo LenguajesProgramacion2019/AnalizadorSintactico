@@ -34,13 +34,43 @@ public class ExtractPythonListener extends TLBaseListener {
 	}
 	
 	@Override
-	public void exitExpresion_aditiva(TLParser.Expresion_aditivaContext ctx){
+	public void exitAssignment(TLParser.AssignmentContext ctx){
 		TokenStream tokens = parser.getTokenStream();
-		String expresion = tokens.getText(ctx.expresion_multiplicativa());
-		//System.out.println(expresion);
+		String expresion = tokens.getText(ctx.assign());
+		System.out.println(expresion);
+
 	}
 
+	public void exitEscribir(TLParser.EscribirContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+		String expresion = tokens.getText(ctx.sentence());
+		System.out.println("print " + expresion);
+	}
+
+	public void exitLeer(TLParser.LeerContext ctx){
+		System.out.println("input()");
+	}	
 	
+	@Override
+	public void exitMientras (TLParser.MientrasContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+		
+		String condicional = tokens.getText(ctx.expresion_condicional());
+		System.out.println("while " + "(" + condicional + ")");
+		
+		String modulo = tokens.getText(ctx.module().block());
+		char[] modulo_char = modulo.toCharArray();
+		System.out.print("   ");
+		for (char c : modulo_char){
+			if (c == '\n')
+				System.out.print("\n   ");
+			else
+				System.out.print( c );
+		}
+	}
+
+
+	/*
 	@Override
 	public void enterPrograma(TLParser.ProgramaContext ctx){
 		System.out.println("Comienzo");
@@ -49,7 +79,7 @@ public class ExtractPythonListener extends TLBaseListener {
 	@Override
 	public void exitPrograma(TLParser.ProgramaContext ctx) {
 		System.out.println("Fin");
-	}
+	}*/
 
 	/** Listen to matches of methodDeclaration */
 	/*@Override

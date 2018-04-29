@@ -1,7 +1,4 @@
-funcion hola(nombre)
-  log ("Hola " + nombre + " :D")
-end funcion 
-hola("nombre")
-
-log("Prueba de suma")
-log(suma(1,2))
+while (5==0) {
+a=a+6}
+while (5!=0)
+      a=a+6
