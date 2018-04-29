@@ -17,7 +17,7 @@ import java.io.InputStream;
 
 public class ExtractPythonTool {
     public static void main(String[] args) throws Exception {
-        String inputFile = "in01.txt";
+        String inputFile = "if.txt";
         if ( args.length>0 ) inputFile = args[0];
         InputStream is = System.in;
         if ( inputFile!=null ) {
