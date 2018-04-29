@@ -26,6 +26,13 @@ public class ExtractPythonListener extends TLBaseListener {
 
 	public void exitLeer(TLParser.LeerContext ctx){
 		System.out.println("input()");
+	}
+
+	public void enterBucle(TLParser.BucleContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+		String iter = tokens.getText(ctx.iter());
+		String module = tokens.getText(ctx.module());
+		System.out.println("for "+ctx.ID()+" in "+iter+":");
 	}	
 
 
