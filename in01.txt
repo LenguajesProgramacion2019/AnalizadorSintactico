@@ -1,3 +1,7 @@
+while (5==0) {
+a=a+6}
+while (5!=0)
+      a=a+6
 a=12 * 14 * 14
 for i in [1,2,4,5]{
 	log("hola mundo")

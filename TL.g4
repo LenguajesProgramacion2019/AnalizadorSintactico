@@ -8,10 +8,13 @@ programa : funcion_seccion module;
 
 
 funcion_seccion: funcion funcion_seccion
+			   | funcion
+			   | '\n'
 			   |
 			   ;
-funcion : 'funcion' ID '(' arg_declaracion ')' '\n' block '\n' retorno 'end' 'funcion' '\n'
-        | 'funcion' ID '(' arg_declaracion ')' '\n' retorno 'end' 'funcion' '\n';
+funcion : 'funcion' name '(' arg_declaracion ')' '\n' block '\n' retorno 'end' 'funcion' '\n'
+        | 'funcion' name '(' arg_declaracion ')' '\n' retorno 'end' 'funcion' '\n' ;
+name : ID;
 arg_declaracion: ID
 			   | ID ',' arg_declaracion
 			   ;

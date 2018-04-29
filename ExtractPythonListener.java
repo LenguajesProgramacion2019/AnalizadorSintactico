@@ -11,11 +11,34 @@ public class ExtractPythonListener extends TLBaseListener {
 	//public void enterExpresion_aditiva(TLParser.Expresion_aditivaContext ctx){
 	//	System.out.println(ctx.expresion_multiplicativa());
 	//}
+	
+	@Override
+	public void exitFuncion(TLParser.FuncionContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+		
+		String nombre = tokens.getText(ctx.name());
+		String argumentos = tokens.getText(ctx.arg_declaracion());
+		System.out.println("def " + nombre + "( " + argumentos + " ):" );
+		
+		String bloque = "";
+		if (ctx.block() != null){
+			bloque = tokens.getText(ctx.block());
+			System.out.println("   " + bloque);
+		}
+		
+		String retorno = "";
+		if (ctx.retorno().sentence() != null){
+			retorno = tokens.getText(ctx.retorno().sentence());
+			System.out.println("   return " + retorno);
+		}		
+	}
+	
 	@Override
 	public void exitAssignment(TLParser.AssignmentContext ctx){
 		TokenStream tokens = parser.getTokenStream();
 		String expresion = tokens.getText(ctx.assign());
 		System.out.println(expresion);
+
 	}
 
 	public void exitEscribir(TLParser.EscribirContext ctx){
@@ -34,6 +57,24 @@ public class ExtractPythonListener extends TLBaseListener {
 		String module = tokens.getText(ctx.module());
 		System.out.println("for "+ctx.ID()+" in "+iter+":");
 	}	
+	
+	@Override
+	public void exitMientras (TLParser.MientrasContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+		
+		String condicional = tokens.getText(ctx.expresion_condicional());
+		System.out.println("while " + "(" + condicional + ")");
+		
+		String modulo = tokens.getText(ctx.module().block());
+		char[] modulo_char = modulo.toCharArray();
+		System.out.print("   ");
+		for (char c : modulo_char){
+			if (c == '\n')
+				System.out.print("\n   ");
+			else
+				System.out.print( c );
+		}
+	}
 
 
 	/*

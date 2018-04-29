@@ -51,6 +51,18 @@ public class TLBaseListener implements TLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterName(TLParser.NameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitName(TLParser.NameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterArg_declaracion(TLParser.Arg_declaracionContext ctx) { }
 	/**
 	 * {@inheritDoc}
