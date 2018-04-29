@@ -54,8 +54,17 @@ public class ExtractPythonListener extends TLBaseListener {
 	public void enterBucle(TLParser.BucleContext ctx){
 		TokenStream tokens = parser.getTokenStream();
 		String iter = tokens.getText(ctx.iter());
-		String module = tokens.getText(ctx.module());
+		String modulo = tokens.getText(ctx.module());
 		System.out.println("for "+ctx.ID()+" in "+iter+":");
+
+		char[] modulo_char = modulo.toCharArray();
+		System.out.print("   ");
+		for (char c : modulo_char){
+			if (c == '\n')
+				System.out.print("\n   ");
+			else
+				System.out.print( c );
+		}
 	}	
 	
 	@Override
@@ -63,8 +72,7 @@ public class ExtractPythonListener extends TLBaseListener {
 		TokenStream tokens = parser.getTokenStream();
 		
 		String condicional = tokens.getText(ctx.expresion_condicional());
-		System.out.println("while " + "(" + condicional + ")");
-		
+		System.out.println("while " + "(" + condicional + "):");
 		String modulo = tokens.getText(ctx.module().block());
 		char[] modulo_char = modulo.toCharArray();
 		System.out.print("   ");
