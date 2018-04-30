@@ -1,3 +1,6 @@
+importar IDENTIFICADOR
+importar IDENTIFICADOR1.IDENTIFICADOR2 
+desde IDENTIFICADOR1 importar IDENTIFICADOR2	
 for i in [1,2,3,4]{
   suma = suma + i
 	log(suma)

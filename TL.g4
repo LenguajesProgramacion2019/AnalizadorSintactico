@@ -41,14 +41,12 @@ module : block module
 	   |
 	   ;
 
-import : 'importar' id_import;
+importar : 'importar' id_import
+	    | 'desde' ID 'importar' ID ;
 
-desde : 'desde' ID 'importar' ID;
-
-importar : import
-	    | desde;
-id_import : '.' id_import
+id_import : ID '.' id_import
 		  | ID;
+
 
 assignment : assign ; 
 

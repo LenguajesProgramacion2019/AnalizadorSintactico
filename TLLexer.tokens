@@ -45,7 +45,7 @@ ID=41
 'end'=4
 ','=5
 'retorno'=6
-'import'=7
+'importar'=7
 'desde'=8
 '.'=9
 '='=10
