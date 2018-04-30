@@ -32,30 +32,180 @@ public class ExtractPythonListener extends TLBaseListener {
 			System.out.println("   return " + retorno);
 		}		
 	}
+
+	@Override
+	public void enterModule (TLParser.ModuleContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+
+		String expresion;
+		String name;
+		char[] expresion_char;
+		if(ctx.block() != null){
+			if(ctx.block().assignment() != null){
+				expresion = tokens.getText(ctx.block().assignment());
+				System.out.println(expresion);
+			}
+			else if(ctx.block().escribir() != null){
+				expresion = tokens.getText(ctx.block().escribir().sentence());
+				System.out.println("print " + expresion);
+			}
+			else if(ctx.block().leer() != null){
+				System.out.println("input()");
+			}
+			
+			else if(ctx.block().sentence() != null){
+				if(ctx.block().sentence().call_array() != null){
+					name = tokens.getText(ctx.block().sentence().call_array().name());
+					expresion = tokens.getText(ctx.block().sentence().call_array().call_array_it());
+					System.out.print(name);
+					expresion_char = expresion.toCharArray();
+					System.out.print("[");
+					for (char c : expresion_char){
+						if (c == ',')
+							System.out.print("][");
+						else
+							System.out.print( c );
+					}
+					System.out.println("]");
+				}
+				else if(ctx.block().sentence().call_dir() != null){
+					name = tokens.getText(ctx.block().sentence().call_dir().name());
+					expresion = tokens.getText(ctx.block().sentence().call_dir().call_dir_it());
+					System.out.print(name);
+					expresion_char = expresion.toCharArray();
+					System.out.print("['");
+					for (char c : expresion_char){
+						if (c == '.')
+							System.out.print("']['");
+						else
+							System.out.print( c );
+					}
+					System.out.println("']");
+				}
+				else if(ctx.block().sentence().dicc() != null){
+					expresion = tokens.getText(ctx.block().sentence().dicc().diccele());
+					expresion_char = expresion.toCharArray();
+					System.out.print("{'");
+					for (char c : expresion_char){
+						if (c == ':')
+							System.out.print("':");
+						else if (c == ',')
+							System.out.print(", '");
+						else
+							System.out.print( c );
+					}
+					System.out.println("'}");
+				}
+				else{
+					expresion = tokens.getText(ctx.block().sentence());
+					System.out.println(expresion);
+				}
+			}
+		}
+	}
 	
 	@Override
-	public void exitSi_bloque (TLParser.Si_bloqueContext ctx){
+	public void enterSi_bloque (TLParser.Si_bloqueContext ctx){
 		TokenStream tokens = parser.getTokenStream();
 		
 		String condicional = tokens.getText(ctx.si().expresion_condicional());
 		System.out.println("if " + condicional + ":");
-		
-		String modulo = tokens.getText(ctx.si().module());
-		System.out.println("   " + modulo);
+		String modulo;
+		if(ctx.si().module_si() != null){
+			printModuleSi(ctx.si().module_si());
+			//modulo = tokens.getText(ctx.si().module_si());
+			//System.out.println("   " + modulo);
+		}
 		
 		if (ctx.sino_si().expresion_condicional() != null){
 			condicional = tokens.getText(ctx.sino_si().expresion_condicional());
 			System.out.println("elif " + condicional + ":");
 			
-			modulo = tokens.getText(ctx.sino_si().module());
-			System.out.println("   " + modulo);
+			if(ctx.sino_si().module_si().block() != null || ctx.sino_si().module_si().importar() != null){
+				printModuleSi(ctx.sino_si().module_si());
+				//modulo = tokens.getText(ctx.sino_si().module_si());
+				//System.out.println("   " + modulo);
+			}
 		}
 		
-		if (ctx.sino().module() != null){
+		if (ctx.sino().module_si() != null){
 			System.out.println("else:");
-			modulo = tokens.getText(ctx.sino().module());
-			System.out.println("   " + modulo);
+			if(ctx.sino().module_si().block() != null || ctx.sino().module_si().importar() != null){
+				printModuleSi(ctx.sino().module_si());
+				//modulo = tokens.getText(ctx.sino().module_si());
+				//System.out.println("   " + modulo);
+			}
 		}
+	}
+
+	public void printModuleSi (TLParser.Module_siContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+
+		String expresion;
+		String name;
+		char[] expresion_char;
+		if(ctx.block() != null){
+			if(ctx.block().assignment() != null){
+				expresion = tokens.getText(ctx.block().assignment());
+				System.out.println("   " + expresion);
+			}
+			else if(ctx.block().escribir() != null){
+				expresion = tokens.getText(ctx.block().escribir().sentence());
+				System.out.println("   " + "print " + expresion);
+			}
+			else if(ctx.block().leer() != null){
+				System.out.println("   " + "input()");
+			}
+			
+			else if(ctx.block().sentence() != null){
+				if(ctx.block().sentence().call_array() != null){
+					name = tokens.getText(ctx.block().sentence().call_array().name());
+					expresion = tokens.getText(ctx.block().sentence().call_array().call_array_it());
+					System.out.print("   " + name);
+					expresion_char = expresion.toCharArray();
+					System.out.print("[");
+					for (char c : expresion_char){
+						if (c == ',')
+							System.out.print("][");
+						else
+							System.out.print( c );
+					}
+					System.out.println("]");
+				}
+				else if(ctx.block().sentence().call_dir() != null){
+					name = tokens.getText(ctx.block().sentence().call_dir().name());
+					expresion = tokens.getText(ctx.block().sentence().call_dir().call_dir_it());
+					System.out.print("   " + name);
+					expresion_char = expresion.toCharArray();
+					System.out.print("['");
+					for (char c : expresion_char){
+						if (c == '.')
+							System.out.print("']['");
+						else
+							System.out.print( c );
+					}
+					System.out.println("']");
+				}
+				else if(ctx.block().sentence().dicc() != null){
+					expresion = tokens.getText(ctx.block().sentence().dicc().diccele());
+					expresion_char = expresion.toCharArray();
+					System.out.print("   " + "{'");
+					for (char c : expresion_char){
+						if (c == ':')
+							System.out.print("':");
+						else if (c == ',')
+							System.out.print(", '");
+						else
+							System.out.print( c );
+					}
+				}
+				else{
+					expresion = tokens.getText(ctx.block().sentence());
+					System.out.println(expresion);
+				}
+			}
+		}
+
 	}
 	
 	@Override
@@ -70,30 +220,16 @@ public class ExtractPythonListener extends TLBaseListener {
 		} 
 	}
 
-	@Override
-	public void exitAssignment(TLParser.AssignmentContext ctx){
-		TokenStream tokens = parser.getTokenStream();
-		String expresion = tokens.getText(ctx.assign());
-		System.out.println(expresion);
-
-	}
-
-	public void exitEscribir(TLParser.EscribirContext ctx){
-		TokenStream tokens = parser.getTokenStream();
-		String expresion = tokens.getText(ctx.sentence());
-		System.out.println("print " + expresion);
-	}
-
-	public void exitLeer(TLParser.LeerContext ctx){
-		System.out.println("input()");
-	}
 
 	public void enterBucle(TLParser.BucleContext ctx){
 		TokenStream tokens = parser.getTokenStream();
+		
 		String iter = tokens.getText(ctx.iter());
-		String modulo = tokens.getText(ctx.module());
 		System.out.println("for "+ctx.ID()+" in "+iter+":");
 
+		printModuleFor(ctx.module_for());
+		
+		/*String modulo = tokens.getText(ctx.module_for());
 		char[] modulo_char = modulo.toCharArray();
 		System.out.print("   ");
 		for (char c : modulo_char){
@@ -101,8 +237,78 @@ public class ExtractPythonListener extends TLBaseListener {
 				System.out.print("\n   ");
 			else
 				System.out.print( c );
-		}
+		}*/
 	}	
+
+	public void printModuleFor (TLParser.Module_forContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+
+		String expresion;
+		String name;
+		char[] expresion_char;
+		if(ctx.block() != null){
+			if(ctx.block().assignment() != null){
+				expresion = tokens.getText(ctx.block().assignment());
+				System.out.println("   " + expresion);
+			}
+			else if(ctx.block().escribir() != null){
+				expresion = tokens.getText(ctx.block().escribir().sentence());
+				System.out.println("   " + "print " + expresion);
+			}
+			else if(ctx.block().leer() != null){
+				System.out.println("   " + "input()");
+			}
+			
+			else if(ctx.block().sentence() != null){
+				if(ctx.block().sentence().call_array() != null){
+					name = tokens.getText(ctx.block().sentence().call_array().name());
+					expresion = tokens.getText(ctx.block().sentence().call_array().call_array_it());
+					System.out.print("   " + name);
+					expresion_char = expresion.toCharArray();
+					System.out.print("[");
+					for (char c : expresion_char){
+						if (c == ',')
+							System.out.print("][");
+						else
+							System.out.print( c );
+					}
+					System.out.println("]");
+				}
+				else if(ctx.block().sentence().call_dir() != null){
+					name = tokens.getText(ctx.block().sentence().call_dir().name());
+					expresion = tokens.getText(ctx.block().sentence().call_dir().call_dir_it());
+					System.out.print("   " + name);
+					expresion_char = expresion.toCharArray();
+					System.out.print("['");
+					for (char c : expresion_char){
+						if (c == '.')
+							System.out.print("']['");
+						else
+							System.out.print( c );
+					}
+					System.out.println("']");
+				}
+				else if(ctx.block().sentence().dicc() != null){
+					expresion = tokens.getText(ctx.block().sentence().dicc().diccele());
+					expresion_char = expresion.toCharArray();
+					System.out.print("   " + "{'");
+					for (char c : expresion_char){
+						if (c == ':')
+							System.out.print("':");
+						else if (c == ',')
+							System.out.print(", '");
+						else
+							System.out.print( c );
+					}
+				}
+				else{
+					expresion = tokens.getText(ctx.block().sentence());
+					System.out.println(expresion);
+				}
+			}
+		}
+
+	}
 	
 	@Override
 	public void exitMientras (TLParser.MientrasContext ctx){
@@ -110,15 +316,81 @@ public class ExtractPythonListener extends TLBaseListener {
 		
 		String condicional = tokens.getText(ctx.expresion_condicional());
 		System.out.println("while " + "(" + condicional + "):");
-		String modulo = tokens.getText(ctx.module().block());
-		char[] modulo_char = modulo.toCharArray();
-		System.out.print("   ");
-		for (char c : modulo_char){
-			if (c == '\n')
-				System.out.print("\n   ");
-			else
-				System.out.print( c );
+
+		printModuleWhile(ctx.module_while());
+		//String modulo = tokens.getText(ctx.module_while());
+		//char[] modulo_char = modulo.toCharArray();
+
+	}
+
+	public void printModuleWhile (TLParser.Module_whileContext ctx){
+		TokenStream tokens = parser.getTokenStream();
+
+		String expresion;
+		String name;
+		char[] expresion_char;
+		if(ctx.block() != null){
+			if(ctx.block().assignment() != null){
+				expresion = tokens.getText(ctx.block().assignment());
+				System.out.println("   " + expresion);
+			}
+			else if(ctx.block().escribir() != null){
+				expresion = tokens.getText(ctx.block().escribir().sentence());
+				System.out.println("   " + "print " + expresion);
+			}
+			else if(ctx.block().leer() != null){
+				System.out.println("   " + "input()");
+			}
+			
+			else if(ctx.block().sentence() != null){
+				if(ctx.block().sentence().call_array() != null){
+					name = tokens.getText(ctx.block().sentence().call_array().name());
+					expresion = tokens.getText(ctx.block().sentence().call_array().call_array_it());
+					System.out.print("   " + name);
+					expresion_char = expresion.toCharArray();
+					System.out.print("[");
+					for (char c : expresion_char){
+						if (c == ',')
+							System.out.print("][");
+						else
+							System.out.print( c );
+					}
+					System.out.println("]");
+				}
+				else if(ctx.block().sentence().call_dir() != null){
+					name = tokens.getText(ctx.block().sentence().call_dir().name());
+					expresion = tokens.getText(ctx.block().sentence().call_dir().call_dir_it());
+					System.out.print("   " + name);
+					expresion_char = expresion.toCharArray();
+					System.out.print("['");
+					for (char c : expresion_char){
+						if (c == '.')
+							System.out.print("']['");
+						else
+							System.out.print( c );
+					}
+					System.out.println("']");
+				}
+				else if(ctx.block().sentence().dicc() != null){
+					expresion = tokens.getText(ctx.block().sentence().dicc().diccele());
+					expresion_char = expresion.toCharArray();
+					System.out.print("   " + "{'");
+					for (char c : expresion_char){
+						if (c == ':')
+							System.out.print("':");
+						else if (c == ',')
+							System.out.print(", '");
+						else
+							System.out.print( c );
+					}
+				}
+				else{
+					expresion = tokens.getText(ctx.block().sentence());
+					System.out.println(expresion);
+				}
+			}
 		}
+
 	}
 
 

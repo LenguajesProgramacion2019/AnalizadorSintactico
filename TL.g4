@@ -30,11 +30,12 @@ block: assignment
 	 | mientras
 	 | sentence
 	 ;			
-sentence : expresion_condicional
+sentence : call_array
+		| call_dir
+		| expresion_condicional
 		| callfunc
 		| array
-		| dicc
-		| call_array;
+		| dicc;
 		
 module : block module
 	   | importar module
@@ -97,11 +98,12 @@ expresion_primaria : INT
 				   | call_array
 				   | '(' expresion_condicional ')';
 				  
-call_dir : ID '.' call_dir_it;
-call_dir_it : ID '.' call_dir_it
-            | ID;
+call_dir : name '.' call_dir_it;
+call_dir_it : nose '.' call_dir_it
+            | nose;
+nose: ID;
 			
-call_array: ID '[' call_array_it ']';
+call_array: name '[' call_array_it ']';
 call_array_it: expresion_aditiva ',' call_array_it
 			 | expresion_aditiva;
 			 
@@ -110,8 +112,9 @@ arrele : sentence
 	   | sentence ',' arrele;
 	 
 dicc : '{' diccele '}'; 
-diccele : ID ':' sentence
-	   | ID ':' sentence ',' diccele;
+diccele : key ':' sentence
+	   | key ':' sentence ',' diccele;
+key: ID;
 			
 INT : [0-9]+ ;
 DOUBLE : [0-9]+ '.' [0-9]+;
@@ -124,33 +127,47 @@ callfunc : ID '(' parametros ')';
 parametros : sentence
 		   | sentence ',' parametros;
 
-bucle : 'for' ID 'in' iter '{' module '}'
-      | 'for' ID 'in' iter  '{' module '}'
-	  | 'for' ID 'in' iter  block ;
+module_for: block module_for
+	  | importar module_for
+	  |
+	  ;
+
+bucle : 'for' ID 'in' iter '{' module_for '}'
+      | 'for' ID 'in' iter  module_for ;
+
+module_si: block module_si
+	  | importar module_si
+	  |
+	  ;
 	  
 si_bloque : si  sino_si  sino
 		  | si sino_si  sino
 		  | si  sino_si sino
 		  | si sino_si sino;
-si : 'if' '(' expresion_condicional ')' '{' module '}'
-   | 'if' '(' expresion_condicional ')'  module ;   
-sino_si : 'else' 'if' '(' expresion_condicional ')' '{'  module '}' sino_si
-     | 'else' 'if' '(' expresion_condicional ')'  module sino_si
-     | 'else' 'if' '(' expresion_condicional ')'  '{'  module '}' sino_si
+si : 'if' '(' expresion_condicional ')' '{' module_si '}'
+   | 'if' '(' expresion_condicional ')'  module_si ;   
+sino_si : 'else' 'if' '(' expresion_condicional ')' '{'  module_si '}' sino_si
+     | 'else' 'if' '(' expresion_condicional ')'  module_si sino_si
+     | 'else' 'if' '(' expresion_condicional ')'  '{'  module_si '}' sino_si
      | 
 	 ;
-sino : 'else' '{' module '}'
-	 | 'else'  '{' module '}'
-     | 'else'  module
+sino : 'else' '{' module_si '}'
+	 | 'else'  '{' module_si '}'
+     | 'else'  module_si
      |
 	 ;
 
 iter : array
      | ID;
 
-mientras : 'while' '(' expresion_condicional ')' '{' module '}'
-      | 'while' '(' expresion_condicional ')'  '{' module '}'
-      | 'while' '(' expresion_condicional ')'  module;
+module_while: block module_while
+	  | importar module_while
+	  |
+	  ;
+
+mientras : 'while' '(' expresion_condicional ')' '{' module_while '}'
+      | 'while' '(' expresion_condicional ')'  '{' module_while '}'
+      | 'while' '(' expresion_condicional ')'  module_while;
 	  
 
  

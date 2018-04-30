@@ -315,6 +315,18 @@ public class TLBaseListener implements TLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNose(TLParser.NoseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNose(TLParser.NoseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCall_array(TLParser.Call_arrayContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -387,6 +399,18 @@ public class TLBaseListener implements TLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterKey(TLParser.KeyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitKey(TLParser.KeyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAlfabeto(TLParser.AlfabetoContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -423,6 +447,18 @@ public class TLBaseListener implements TLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterModule_for(TLParser.Module_forContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitModule_for(TLParser.Module_forContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBucle(TLParser.BucleContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -430,6 +466,18 @@ public class TLBaseListener implements TLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBucle(TLParser.BucleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterModule_si(TLParser.Module_siContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitModule_si(TLParser.Module_siContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -490,6 +538,18 @@ public class TLBaseListener implements TLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIter(TLParser.IterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterModule_while(TLParser.Module_whileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitModule_while(TLParser.Module_whileContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

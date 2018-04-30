@@ -257,6 +257,16 @@ public interface TLListener extends ParseTreeListener {
 	 */
 	void exitCall_dir_it(TLParser.Call_dir_itContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TLParser#nose}.
+	 * @param ctx the parse tree
+	 */
+	void enterNose(TLParser.NoseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TLParser#nose}.
+	 * @param ctx the parse tree
+	 */
+	void exitNose(TLParser.NoseContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TLParser#call_array}.
 	 * @param ctx the parse tree
 	 */
@@ -317,6 +327,16 @@ public interface TLListener extends ParseTreeListener {
 	 */
 	void exitDiccele(TLParser.DicceleContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TLParser#key}.
+	 * @param ctx the parse tree
+	 */
+	void enterKey(TLParser.KeyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TLParser#key}.
+	 * @param ctx the parse tree
+	 */
+	void exitKey(TLParser.KeyContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TLParser#alfabeto}.
 	 * @param ctx the parse tree
 	 */
@@ -347,6 +367,16 @@ public interface TLListener extends ParseTreeListener {
 	 */
 	void exitParametros(TLParser.ParametrosContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TLParser#module_for}.
+	 * @param ctx the parse tree
+	 */
+	void enterModule_for(TLParser.Module_forContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TLParser#module_for}.
+	 * @param ctx the parse tree
+	 */
+	void exitModule_for(TLParser.Module_forContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TLParser#bucle}.
 	 * @param ctx the parse tree
 	 */
@@ -356,6 +386,16 @@ public interface TLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBucle(TLParser.BucleContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TLParser#module_si}.
+	 * @param ctx the parse tree
+	 */
+	void enterModule_si(TLParser.Module_siContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TLParser#module_si}.
+	 * @param ctx the parse tree
+	 */
+	void exitModule_si(TLParser.Module_siContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TLParser#si_bloque}.
 	 * @param ctx the parse tree
@@ -406,6 +446,16 @@ public interface TLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIter(TLParser.IterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TLParser#module_while}.
+	 * @param ctx the parse tree
+	 */
+	void enterModule_while(TLParser.Module_whileContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TLParser#module_while}.
+	 * @param ctx the parse tree
+	 */
+	void exitModule_while(TLParser.Module_whileContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TLParser#mientras}.
 	 * @param ctx the parse tree
